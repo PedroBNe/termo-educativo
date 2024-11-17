@@ -31,3 +31,47 @@ body {
     text-wrap: balance;
   }
 }
+
+.simple-keyboard {
+  background-color: #ffffff; /* Cor de fundo */
+  border: 1px solid #e5e7eb; /* Border Tailwind gray-200 */
+  border-radius: 0.375rem; /* Tailwind rounded-md */
+  padding: 1rem; /* Tailwind p-4 */
+}
+
+.simple-keyboard .hg-button {
+  background-color: #f3f4f6; /* Tailwind gray-100 */
+  color: #374151; /* Tailwind gray-700 */
+  border: 1px solid #d1d5db; /* Tailwind gray-300 */
+  border-radius: 0.375rem; /* Tailwind rounded-md */
+  margin: 0.25rem; /* Tailwind m-1 */
+  padding: 0.5rem 0.75rem; /* Tailwind px-3 py-2 */
+  font-size: 1rem; /* Tailwind text-base */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.simple-keyboard .hg-button:hover {
+  background-color: #e5e7eb; /* Tailwind gray-200 */
+}
+
+.simple-keyboard .hg-button:active {
+  background-color: #d1d5db; /* Tailwind gray-300 */
+}
+
+.simple-keyboard .hg-button-bksp {
+  background-color: #f87171; /* Tailwind red-400 */
+  color: #ffffff;
+}
+
+.simple-keyboard .hg-button-bksp:hover {
+  background-color: #ef4444; /* Tailwind red-500 */
+}
+
+.simple-keyboard .hg-button-bksp{
+  color: black;
+}
+
+.simple-keyboard .hg-button-bksp:hover{
+  color: white;
+}
