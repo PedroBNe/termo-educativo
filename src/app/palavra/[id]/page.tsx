@@ -4,6 +4,7 @@ import words from "@/app/data/words";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import Keyboard from "react-simple-keyboard";
+import Confetti from "react-confetti";
 import "react-simple-keyboard/build/css/index.css";
 
 interface GamePageProps {
@@ -25,6 +26,7 @@ export default function GamePage({ params }: GamePageProps) {
   );
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
 
   const handleKeyPress = (button: string) => {
     if (button === "{bksp}") {
@@ -44,7 +46,7 @@ export default function GamePage({ params }: GamePageProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const updatedCorrectLetters = Array(wordData.palavra.length).fill(false); // Redefine o estado
+    const updatedCorrectLetters = Array(wordData.palavra.length).fill(false);
 
     // Atualiza os estados das letras corretas
     for (let i = 0; i < wordData.palavra.length; i++) {
@@ -58,13 +60,16 @@ export default function GamePage({ params }: GamePageProps) {
     const userGuess = guess.join("").toLowerCase();
     if (userGuess === wordData.palavra.toLowerCase()) {
       setMessage("Parabéns! Você acertou!");
+      setShowConfetti(true); // Exibe confetes
     } else {
       setMessage("Tente novamente!");
+      setShowConfetti(false); // Oculta confetes caso esteja visível
     }
   };
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      {showConfetti && <Confetti />}
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Descubra a Palavra</h1>
       <p className="text-lg text-gray-600 mb-6">
         <strong>Dica:</strong> {wordData.dica}
