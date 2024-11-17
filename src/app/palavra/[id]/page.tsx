@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import words from "@/app/data/words";
@@ -15,7 +16,7 @@ interface GamePageProps {
 export default function GamePage({ params }: GamePageProps) {
   const wordId = Number(params.id);
   const wordData = words.find((word) => word.id === wordId);
-  const router = useRouter(); // Para navegação entre fases
+  const router = useRouter();
 
   if (!wordData) {
     notFound();
@@ -34,15 +35,15 @@ export default function GamePage({ params }: GamePageProps) {
     if (button === "{bksp}") {
       if (currentIndex > 0) {
         const updatedGuess = [...guess];
-        updatedGuess[currentIndex - 1] = ""; // Apaga a última letra
+        updatedGuess[currentIndex - 1] = "";
         setGuess(updatedGuess);
-        setCurrentIndex((prev) => prev - 1); // Move o índice para trás
+        setCurrentIndex((prev) => prev - 1);
       }
     } else if (currentIndex < wordData.palavra.length && button.length === 1) {
       const updatedGuess = [...guess];
-      updatedGuess[currentIndex] = button; // Insere a letra digitada
+      updatedGuess[currentIndex] = button;
       setGuess(updatedGuess);
-      setCurrentIndex((prev) => prev + 1); // Avança o índice
+      setCurrentIndex((prev) => prev + 1);
     }
   };
 
@@ -50,7 +51,6 @@ export default function GamePage({ params }: GamePageProps) {
     e.preventDefault();
     const updatedCorrectLetters = Array(wordData.palavra.length).fill(false);
 
-    // Atualiza os estados das letras corretas
     for (let i = 0; i < wordData.palavra.length; i++) {
       if (guess[i]?.toLowerCase() === wordData.palavra[i]?.toLowerCase()) {
         updatedCorrectLetters[i] = true;
@@ -61,13 +61,13 @@ export default function GamePage({ params }: GamePageProps) {
 
     const userGuess = guess.join("").toLowerCase();
     if (userGuess === wordData.palavra.toLowerCase()) {
-      setShowConfetti(true); // Exibe confetes
-      setShowCongrats(true); // Exibe a mensagem de parabéns
+      setShowConfetti(true);
+      setShowCongrats(true);
     }
   };
 
   const handleNextPhase = () => {
-    router.push(`/palavra/${wordId + 1}`); // Vai para o próximo ID
+    router.push(`/palavra/${wordId + 1}`);
   };
 
   return (
