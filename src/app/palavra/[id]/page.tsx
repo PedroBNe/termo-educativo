@@ -20,6 +20,9 @@ export default function GamePage({ params }: GamePageProps) {
   }
 
   const [guess, setGuess] = useState<string[]>(Array(wordData.palavra.length).fill(""));
+  const [correctLetters, setCorrectLetters] = useState<boolean[]>(
+    Array(wordData.palavra.length).fill(false)
+  );
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
 
@@ -41,6 +44,17 @@ export default function GamePage({ params }: GamePageProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const updatedCorrectLetters = Array(wordData.palavra.length).fill(false); // Redefine o estado
+
+    // Atualiza os estados das letras corretas
+    for (let i = 0; i < wordData.palavra.length; i++) {
+      if (guess[i]?.toLowerCase() === wordData.palavra[i]?.toLowerCase()) {
+        updatedCorrectLetters[i] = true;
+      }
+    }
+
+    setCorrectLetters(updatedCorrectLetters);
+
     const userGuess = guess.join("").toLowerCase();
     if (userGuess === wordData.palavra.toLowerCase()) {
       setMessage("Parabéns! Você acertou!");
@@ -60,7 +74,8 @@ export default function GamePage({ params }: GamePageProps) {
           {guess.map((letter, index) => (
             <div
               key={index}
-              className="w-12 h-12 border border-gray-400 rounded-md flex items-center justify-center text-lg font-bold bg-white text-black shadow"
+              className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow ${correctLetters[index] ? "bg-green-500 text-white" : "bg-white text-black"
+                }`}
             >
               {letter.toUpperCase()}
             </div>
