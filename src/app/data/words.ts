@@ -7,7 +7,7 @@ export interface Word {
 const words: Word[] = [
   {
     id: 1,
-    palavra: "Amiga",
+    palavra: "Amigo",
     dica: "É aquela pessoa que você procura para brincar e conversar. Ela te ajuda quando você precisa e compartilha as alegrias e risadas.",
   },
   {

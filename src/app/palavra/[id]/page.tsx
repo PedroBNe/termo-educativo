@@ -71,61 +71,63 @@ export default function GamePage({ params }: GamePageProps) {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      {showConfetti && <Confetti />}
-      {showCongrats ? (
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <h1 className="text-4xl font-bold text-green-600">Parabéns! Você acertou!</h1>
-          <button
-            onClick={handleNextPhase}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition-colors"
-          >
-            Próxima Fase
-          </button>
-        </div>
-      ) : (
-        <>
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Descubra a Palavra</h1>
-          <p className="text-lg text-gray-600 mb-6">
-            <strong>Dica:</strong> {wordData.dica}
-          </p>
-          <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col items-center">
-            <div className="flex space-x-2 mb-4">
-              {guess.map((letter, index) => (
-                <div
-                  key={index}
-                  className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow ${correctLetters[index] ? "bg-green-500 text-white" : "bg-white text-black"
-                    }`}
-                >
-                  {letter.toUpperCase()}
-                </div>
-              ))}
-            </div>
+    <main className="flex flex-col items-center justify-center min-h-screen p-6 bg-[url('/image.jpg')]">
+      <div className="flex flex-col items-center justify-center bg-white rounded-lg p-6 py-16">
+        {showConfetti && <Confetti />}
+        {showCongrats ? (
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <h1 className="text-4xl font-bold text-green-600 text-center">Parabéns! Você acertou!</h1>
             <button
-              type="submit"
-              className="w-full py-2 px-4 text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 transition-colors"
+              onClick={handleNextPhase}
+              className="px-6 py-3 bg-[#222] text-white font-semibold rounded-md shadow hover:bg-[#000] transition-colors"
             >
-              Enviar
+              Próxima Fase
             </button>
-          </form>
-          <div className="mt-6 w-full max-w-md bg-white p-4 shadow rounded-md">
-            <Keyboard
-              onKeyPress={handleKeyPress}
-              layout={{
-                default: [
-                  "q w e r t y u i o p",
-                  "a s d f g h j k l",
-                  "z x c v b n m {bksp}",
-                ],
-              }}
-              display={{
-                "{bksp}": "⌫",
-              }}
-              theme={"hg-theme-default"}
-            />
           </div>
-        </>
-      )}
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Descubra a Palavra</h1>
+            <p className="text-lg text-gray-600 mb-6">
+              <strong>Dica:</strong> {wordData.dica}
+            </p>
+            <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col items-center">
+              <div className="flex space-x-2 mb-4">
+                {guess.map((letter, index) => (
+                  <div
+                    key={index}
+                    className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow ${correctLetters[index] ? "bg-green-500 text-white" : "bg-white text-black"
+                      }`}
+                  >
+                    {letter.toUpperCase()}
+                  </div>
+                ))}
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 px-4 text-white bg-[#222] rounded-md shadow hover:bg-[#000] transition-colors"
+              >
+                Enviar
+              </button>
+            </form>
+            <div className="mt-6 w-full max-w-md bg-white md:p-4 shadow rounded-md">
+              <Keyboard
+                onKeyPress={handleKeyPress}
+                layout={{
+                  default: [
+                    "q w e r t y u i o p",
+                    "a s d f g h j k l",
+                    "z x c v b n m {bksp}",
+                  ],
+                }}
+                display={{
+                  "{bksp}": "⌫",
+                }}
+                theme={"hg-theme-default"}
+              />
+            </div>
+          </>
+        )}
+      </div>
     </main>
   );
 }
