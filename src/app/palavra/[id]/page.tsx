@@ -91,7 +91,7 @@ export default function GamePage({ params }: GamePageProps) {
               <strong>Dica:</strong> {wordData.dica}
             </p>
             <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col items-center">
-              <div className="flex space-x-2 mb-4">
+              <div className="flex space-x-2 mb-4 max-w-[80vw]">
                 {guess.map((letter, index) => (
                   <div
                     key={index}
