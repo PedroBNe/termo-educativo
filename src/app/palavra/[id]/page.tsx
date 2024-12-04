@@ -182,7 +182,7 @@ export default function GamePage({ params }: GamePageProps) {
             )}
 
             {/* Exibir Histórico de Tentativas */}
-            <div className="mt-6 w-full max-w-md bg-white md:p-4 shadow rounded-md">
+            <div className="flex justify-center items-center flex-col mt-6 w-full max-w-md bg-white md:p-4 shadow rounded-md">
               {attemptsHistory.length > 0 && (
                 <div className="space-y-4">
                   {attemptsHistory.map((attempt, index) => (
