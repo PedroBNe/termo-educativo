@@ -186,7 +186,7 @@ export default function GamePage({ params }: GamePageProps) {
               {attemptsHistory.length > 0 && (
                 <div className="space-y-4">
                   {attemptsHistory.map((attempt, index) => (
-                    <div key={index} className="flex space-x-2">
+                    <div key={index} className="flex space-x-2 mb-4 max-w-[80vw]">
                       {attempt.guess.map((letter, i) => (
                         <div
                           key={i}
