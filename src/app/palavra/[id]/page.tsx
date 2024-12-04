@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-"use client";
+"use client"
 
 import words from "@/app/data/words";
 import { useRouter } from "next/navigation";
@@ -24,9 +23,8 @@ export default function GamePage({ params }: GamePageProps) {
   }
 
   const [guess, setGuess] = useState<string[]>(Array(wordData.palavra.length).fill(""));
-  const [correctLetters, setCorrectLetters] = useState<boolean[]>(
-    Array(wordData.palavra.length).fill(false)
-  );
+  const [correctLetters, setCorrectLetters] = useState<boolean[]>(Array(wordData.palavra.length).fill(false));
+  const [almostCorrectLetters, setAlmostCorrectLetters] = useState<boolean[]>(Array(wordData.palavra.length).fill(false));
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [showCongrats, setShowCongrats] = useState<boolean>(false);
@@ -51,14 +49,31 @@ export default function GamePage({ params }: GamePageProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const updatedCorrectLetters = Array(wordData.palavra.length).fill(false);
+    const updatedAlmostCorrectLetters = Array(wordData.palavra.length).fill(false);
 
+    // Primeiro, verifica as letras corretas
     for (let i = 0; i < wordData.palavra.length; i++) {
       if (guess[i]?.toLowerCase() === wordData.palavra[i]?.toLowerCase()) {
         updatedCorrectLetters[i] = true;
       }
     }
 
+    // Depois, verifica as letras que estão na palavra, mas em outro lugar
+    for (let i = 0; i < wordData.palavra.length; i++) {
+      if (!updatedCorrectLetters[i]) {
+        const guessLetter = guess[i]?.toLowerCase();
+        // Verifica se a letra está na palavra, mas em outro lugar
+        if (guessLetter && wordData.palavra.toLowerCase().includes(guessLetter)) {
+          // Verifica se não está na posição certa
+          if (wordData.palavra.toLowerCase().indexOf(guessLetter) !== i) {
+            updatedAlmostCorrectLetters[i] = true;
+          }
+        }
+      }
+    }
+
     setCorrectLetters(updatedCorrectLetters);
+    setAlmostCorrectLetters(updatedAlmostCorrectLetters);
 
     const userGuess = guess.join("").toLowerCase();
     if (userGuess === wordData.palavra.toLowerCase()) {
@@ -114,8 +129,11 @@ export default function GamePage({ params }: GamePageProps) {
                 {guess.map((letter, index) => (
                   <div
                     key={index}
-                    className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow ${correctLetters[index] ? "bg-green-500 text-white" : "bg-white text-black"
-                      }`}
+                    className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow 
+                      ${correctLetters[index] ? "bg-green-500 text-white" : 
+                        almostCorrectLetters[index] ? "bg-yellow-500 text-white" : 
+                        "bg-white text-black"}
+                    `}
                   >
                     {letter.toUpperCase()}
                   </div>
