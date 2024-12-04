@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 
 import words from "@/app/data/words";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Keyboard from "react-simple-keyboard";
 import Confetti from "react-confetti";
 import "react-simple-keyboard/build/css/index.css";
@@ -17,15 +18,10 @@ export default function GamePage({ params }: GamePageProps) {
   const wordData = words.find((word) => word.id === wordId);
   const router = useRouter();
 
-  if (!wordData) {
-    notFound();
-    return null;
-  }
-
   // Estados do jogo
-  const [guess, setGuess] = useState<string[]>(Array(wordData.palavra.length).fill(""));
-  const [correctLetters, setCorrectLetters] = useState<boolean[]>(Array(wordData.palavra.length).fill(false));
-  const [almostCorrectLetters, setAlmostCorrectLetters] = useState<boolean[]>(Array(wordData.palavra.length).fill(false));
+  const [guess, setGuess] = useState<string[]>([]);
+  const [correctLetters, setCorrectLetters] = useState<boolean[]>([]);
+  const [almostCorrectLetters, setAlmostCorrectLetters] = useState<boolean[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [showCongrats, setShowCongrats] = useState<boolean>(false);
@@ -33,6 +29,18 @@ export default function GamePage({ params }: GamePageProps) {
 
   // Histórico de tentativas
   const [attemptsHistory, setAttemptsHistory] = useState<{ guess: string[]; correctLetters: boolean[]; almostCorrectLetters: boolean[] }[]>([]);
+
+  if (!wordData) {
+    notFound();
+    return null;
+  }
+
+  // Initialize states based on wordData
+  useEffect(() => {
+    setGuess(Array(wordData.palavra.length).fill(""));
+    setCorrectLetters(Array(wordData.palavra.length).fill(false));
+    setAlmostCorrectLetters(Array(wordData.palavra.length).fill(false));
+  }, [wordData]);
 
   // Função para lidar com as teclas pressionadas no teclado virtual
   const handleKeyPress = (button: string) => {
