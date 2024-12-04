@@ -22,6 +22,7 @@ export default function GamePage({ params }: GamePageProps) {
     return null;
   }
 
+  // Estados do jogo
   const [guess, setGuess] = useState<string[]>(Array(wordData.palavra.length).fill(""));
   const [correctLetters, setCorrectLetters] = useState<boolean[]>(Array(wordData.palavra.length).fill(false));
   const [almostCorrectLetters, setAlmostCorrectLetters] = useState<boolean[]>(Array(wordData.palavra.length).fill(false));
@@ -30,8 +31,13 @@ export default function GamePage({ params }: GamePageProps) {
   const [showCongrats, setShowCongrats] = useState<boolean>(false);
   const [showFinalCongrats, setShowFinalCongrats] = useState<boolean>(false);
 
+  // Histórico de tentativas
+  const [attemptsHistory, setAttemptsHistory] = useState<{ guess: string[]; correctLetters: boolean[]; almostCorrectLetters: boolean[] }[]>([]);
+
+  // Função para lidar com as teclas pressionadas no teclado virtual
   const handleKeyPress = (button: string) => {
     if (button === "{bksp}") {
+      // Ao pressionar backspace, apaga a letra na posição atual
       if (currentIndex > 0) {
         const updatedGuess = [...guess];
         updatedGuess[currentIndex - 1] = "";
@@ -39,6 +45,7 @@ export default function GamePage({ params }: GamePageProps) {
         setCurrentIndex((prev) => prev - 1);
       }
     } else if (currentIndex < wordData.palavra.length && button.length === 1) {
+      // Se o botão pressionado for uma letra e ainda houver espaço, adiciona à tentativa
       const updatedGuess = [...guess];
       updatedGuess[currentIndex] = button;
       setGuess(updatedGuess);
@@ -46,25 +53,25 @@ export default function GamePage({ params }: GamePageProps) {
     }
   };
 
+  // Função para verificar a resposta e adicionar ao histórico de tentativas
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     const updatedCorrectLetters = Array(wordData.palavra.length).fill(false);
     const updatedAlmostCorrectLetters = Array(wordData.palavra.length).fill(false);
 
-    // Primeiro, verifica as letras corretas
+    // Verificar as letras corretas
     for (let i = 0; i < wordData.palavra.length; i++) {
       if (guess[i]?.toLowerCase() === wordData.palavra[i]?.toLowerCase()) {
         updatedCorrectLetters[i] = true;
       }
     }
 
-    // Depois, verifica as letras que estão na palavra, mas em outro lugar
+    // Verificar as letras quase corretas
     for (let i = 0; i < wordData.palavra.length; i++) {
       if (!updatedCorrectLetters[i]) {
         const guessLetter = guess[i]?.toLowerCase();
-        // Verifica se a letra está na palavra, mas em outro lugar
         if (guessLetter && wordData.palavra.toLowerCase().includes(guessLetter)) {
-          // Verifica se não está na posição certa
           if (wordData.palavra.toLowerCase().indexOf(guessLetter) !== i) {
             updatedAlmostCorrectLetters[i] = true;
           }
@@ -76,15 +83,29 @@ export default function GamePage({ params }: GamePageProps) {
     setAlmostCorrectLetters(updatedAlmostCorrectLetters);
 
     const userGuess = guess.join("").toLowerCase();
+
+    // Adicionando a tentativa ao histórico
+    setAttemptsHistory((prevHistory) => [
+      ...prevHistory,
+      { guess: [...guess], correctLetters: updatedCorrectLetters, almostCorrectLetters: updatedAlmostCorrectLetters },
+    ]);
+
+    // Verificar se a tentativa está correta
     if (userGuess === wordData.palavra.toLowerCase()) {
       setShowConfetti(true);
       setShowCongrats(true);
+    } else {
+      // Limpar os campos para nova tentativa
+      setGuess(Array(wordData.palavra.length).fill(""));
+      setCorrectLetters(Array(wordData.palavra.length).fill(false));
+      setAlmostCorrectLetters(Array(wordData.palavra.length).fill(false));
+      setCurrentIndex(0);
     }
   };
 
+  // Função para avançar para a próxima fase
   const handleNextPhase = () => {
     if (wordId === words[words.length - 1].id) {
-      // Se for o último jogo, exibe mensagem final
       setShowCongrats(false);
       setShowFinalCongrats(true);
     } else {
@@ -132,8 +153,7 @@ export default function GamePage({ params }: GamePageProps) {
                     className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow 
                       ${correctLetters[index] ? "bg-green-500 text-white" : 
                         almostCorrectLetters[index] ? "bg-yellow-500 text-white" : 
-                        "bg-white text-black"}
-                    `}
+                        "bg-white text-black"}`}
                   >
                     {letter.toUpperCase()}
                   </div>
@@ -146,6 +166,36 @@ export default function GamePage({ params }: GamePageProps) {
                 Enviar
               </button>
             </form>
+
+            {showCongrats && (
+              <div className="mt-4 text-green-600">
+                <p>Você acertou! 🎉</p>
+              </div>
+            )}
+
+            {/* Exibir Histórico de Tentativas */}
+            <div className="mt-6 w-full max-w-md">
+              {attemptsHistory.length > 0 && (
+                <div className="space-y-4">
+                  {attemptsHistory.map((attempt, index) => (
+                    <div key={index} className="flex space-x-2">
+                      {attempt.guess.map((letter, i) => (
+                        <div
+                          key={i}
+                          className={`w-12 h-12 border rounded-md flex items-center justify-center text-lg font-bold shadow
+                            ${attempt.correctLetters[i] ? "bg-green-500 text-white" : 
+                              attempt.almostCorrectLetters[i] ? "bg-yellow-500 text-white" : 
+                              "bg-white text-black"}`}
+                        >
+                          {letter.toUpperCase()}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div className="mt-6 w-full max-w-md bg-white md:p-4 shadow rounded-md">
               <Keyboard
                 onKeyPress={handleKeyPress}
